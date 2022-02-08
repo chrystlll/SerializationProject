@@ -12,7 +12,6 @@ public class StartTest {
         
         try ( PrintWriter writer = new PrintWriter( file ) ) {
             /* Test float int string */
-        	
         	SerializationEngine.writeObject( 10, writer );
             SerializationEngine.writeObject( 18.1415, writer );
             SerializationEngine.writeObject( "Test serialisation", writer );

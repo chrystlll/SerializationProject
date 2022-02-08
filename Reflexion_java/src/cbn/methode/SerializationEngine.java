@@ -10,7 +10,6 @@ public class SerializationEngine {
 	public static void writeObject(Object object, PrintWriter writer) throws Exception {
 
 		/* Generic classes : primitive and String */
-		
 
 		Class<?> metadata = object.getClass();
 		if (metadata == Byte.class || metadata == Short.class || metadata == Integer.class || metadata == Long.class
