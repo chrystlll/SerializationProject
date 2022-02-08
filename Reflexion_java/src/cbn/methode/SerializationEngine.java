@@ -2,10 +2,11 @@ package cbn.methode;
 
 import java.io.PrintWriter;
 import java.io.Reader;
+import java.io.Serializable;
 import java.util.Locale;
 import java.util.Scanner;
 
-public class SerializationEngine {
+public class SerializationEngine implements Serializable{
 
 	public static void writeObject(Object object, PrintWriter writer) throws Exception {
 
@@ -20,10 +21,18 @@ public class SerializationEngine {
 		} else {
 			throw new Exception("Not actually implemented");
 		}
-		writer.print(System.getProperty("line.separator"));
+	//	writer.print(System.getProperty("line.separator"));
 	}
 
 	private static Object readObject(Class<?> metadata, Scanner scanner) throws Exception {
+		
+		/*Note : findInLine() vs next(Pattern)
+		 * Next => read until a separation char 
+		 * InLine => read the char until a different type of character */
+		
+		//System.out.println("value scanner : " + scanner.findInLine("\".*?\""));
+		System.out.println(metadata.toString());
+		
 		if (metadata == Byte.class || metadata == byte.class) {
 			return Byte.parseByte(scanner.findInLine("[0-9]+"));
 		} else if (metadata == Short.class || metadata == short.class) {
@@ -39,8 +48,11 @@ public class SerializationEngine {
 		} else if (metadata == Boolean.class || metadata == boolean.class) {
 			return Boolean.parseBoolean(scanner.findInLine("true|false"));
 		} else if (metadata == String.class || metadata == Character.class || metadata == char.class) {
-			String value = scanner.findInLine("\".*?\"");
-			return value.substring(1, value.length() - 1);
+			String valString = null;
+			valString =scanner.findInLine("\".*?\"");
+			System.out.println("valString : " + valString);
+			return valString.substring(1, valString.length() - 1);
+			
 		} else {
 			throw new Exception("Not actually implemented");
 		}
