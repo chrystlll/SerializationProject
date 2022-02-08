@@ -2,27 +2,53 @@ package cbn.methode;
 
 import java.io.PrintWriter;
 import java.io.Reader;
-import java.io.Serializable;
+import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
 
-public class SerializationEngine implements Serializable{
+public class SerializationEngine{
 
-	public static void writeObject(Object object, PrintWriter writer) throws Exception {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
-		/* Generic classes : primitive and String */
+	public static void writeObject( Object object, PrintWriter writer ) throws Exception {
+	    Class<?> metadata = object.getClass();
+	    if ( metadata == Byte.class ||
+	         metadata == Short.class ||
+	         metadata == Integer.class ||
+	         metadata == Long.class ||
+	         metadata == Float.class ||
+	         metadata == Double.class ||
+	         metadata == Boolean.class ) {
+	        // --- Manage base type ---
+	        writer.print( "" + object );
+	    } else if ( metadata == String.class || metadata == Character.class ) {
+	        // --- Manage String ---
+	        writer.print( "\"" + object + "\"" );
+	    } else if ( metadata.isArray() || object instanceof List ) {
+	        // --- Manage Array and Collection ---
+	        @SuppressWarnings("rawtypes") 
+	        List collection = object instanceof List 
+	                ? (List) object : ArrayUtils.toObjectList( object ) ;
+	        int size = collection.size();
+	        int i = 0;
 
-		Class<?> metadata = object.getClass();
-		if (metadata == Byte.class || metadata == Short.class || metadata == Integer.class || metadata == Long.class
-				|| metadata == Float.class || metadata == Double.class || metadata == Boolean.class) {
-			writer.print("" + object);
-		} else if (metadata == String.class || metadata == Character.class) {
-			writer.print("\"" + object + "\"");
-		} else {
-			throw new Exception("Not actually implemented");
-		}
-	//	writer.print(System.getProperty("line.separator"));
+	        writer.print( "[" );
+	        for( Object value : collection ) {
+	            writeObject( value, writer );
+	            if ( i++ < size - 1 ) writer.print( "," );
+	        }
+	        writer.print( "]" );
+	    } else {
+	        // --- Other types ---
+	        throw new Exception( "Not actually implemented" );
+	    }
+//		writer.print(System.getProperty("line.separator"));
 	}
+	
+	
 
 	private static Object readObject(Class<?> metadata, Scanner scanner) throws Exception {
 		
