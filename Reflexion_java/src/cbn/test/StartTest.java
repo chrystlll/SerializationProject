@@ -8,7 +8,7 @@ public class StartTest {
 
 	public static void main( String[] args ) throws Exception {
         
-        String file = "./file.json";
+        String file = "./test.json";
         
         try ( PrintWriter writer = new PrintWriter( file ) ) {
             /* Test float int string */
